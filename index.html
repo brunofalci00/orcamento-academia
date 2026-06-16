@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Proposta de Consultoria · Academia para Condomínios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* =========================================================================
+     ORCAMENTO INTERATIVO: Academia modular para condominios
+     Para editar valores e textos, mexa só no objeto CONFIG no início do <script>.
+     ========================================================================= */
+  :root{
+    --bg:#F3F0E8;
+    --card:#FBFAF5;
+    --ink:#1C1A16;
+    --ink-soft:#6A6357;
+    --ink-faint:#9A9384;
+    --line:#E4DECF;
+    --accent:#B5653A;
+    --accent-deep:#8A4A28;
+    --accent-tint:rgba(181,101,58,.07);
+    --panel:#1C1A16;
+    --panel-ink:#F0EBDF;
+    --panel-soft:#A59E8E;
+    --panel-line:#36322A;
+    --radius:14px;
+    --maxw:1140px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Manrope",system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+    overflow-x:hidden;
+  }
+  /* textura sutil de grão */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+  }
+  .wrap{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+  /* ---------- HERO ---------- */
+  header.hero{padding:72px 0 36px;border-bottom:1px solid var(--line)}
+  .kicker{
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin-bottom:22px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .kicker::before{content:"";width:28px;height:1px;background:var(--accent)}
+  h1{
+    font-family:"Fraunces",serif;font-optical-sizing:auto;
+    font-weight:400;font-size:clamp(2.4rem,5.4vw,4rem);
+    line-height:1.02;letter-spacing:-.01em;max-width:14ch;
+  }
+  h1 em{font-style:italic;color:var(--accent)}
+  .lead{margin-top:20px;font-size:clamp(1rem,1.6vw,1.18rem);color:var(--ink-soft);max-width:48ch}
+  .meta{
+    margin-top:30px;display:flex;flex-wrap:wrap;gap:10px 22px;
+    font-size:13.5px;color:var(--ink-soft);
+  }
+  .meta b{color:var(--ink);font-weight:600}
+  .meta span{display:inline-flex;align-items:center;gap:8px}
+  .meta span+span::before{content:"·";color:var(--ink-faint);margin-right:14px}
+
+  /* ---------- PRESETS ---------- */
+  .presets-block{padding:40px 0 8px}
+  .sec-label{
+    font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:600;margin-bottom:16px;
+  }
+  .presets{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .preset{
+    position:relative;text-align:left;cursor:pointer;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 18px 16px;font-family:inherit;transition:.25s var(--ease);
+  }
+  .preset:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .preset.active{border-color:var(--accent);background:var(--accent-tint);box-shadow:inset 0 0 0 1px var(--accent)}
+  .preset .pname{font-family:"Fraunces",serif;font-size:1.15rem;font-weight:500}
+  .preset .pdesc{font-size:12.5px;color:var(--ink-soft);margin-top:4px}
+  .preset .ptag{
+    position:absolute;top:14px;right:14px;font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:#fff;background:var(--accent);
+    padding:3px 8px;border-radius:20px;font-weight:600;
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .layout{display:grid;grid-template-columns:1.55fr 1fr;gap:40px;align-items:start;padding:36px 0 80px}
+  .config-col{min-width:0}
+  .group{margin-bottom:34px}
+  .group h2{
+    font-family:"Fraunces",serif;font-weight:500;font-size:1.5rem;
+    margin-bottom:4px;letter-spacing:-.01em;
+  }
+  .group .ghint{font-size:13px;color:var(--ink-soft);margin-bottom:16px}
+
+  /* ---------- ITEM CARDS ---------- */
+  .item{
+    width:100%;text-align:left;cursor:pointer;font-family:inherit;color:inherit;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 20px;display:flex;gap:16px;align-items:flex-start;
+    transition:.22s var(--ease);margin-bottom:12px;position:relative;
+  }
+  .item:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 10px 30px -18px rgba(28,26,22,.4)}
+  .item.on{border-color:var(--accent);background:var(--accent-tint);box-shadow:inset 0 0 0 1px var(--accent)}
+  .check{
+    flex:none;width:24px;height:24px;border-radius:7px;border:1.5px solid var(--ink-faint);
+    margin-top:2px;display:grid;place-items:center;transition:.2s var(--ease);
+  }
+  .item.on .check{background:var(--accent);border-color:var(--accent)}
+  .check svg{width:13px;height:13px;opacity:0;transform:scale(.4);transition:.2s var(--ease)}
+  .item.on .check svg{opacity:1;transform:scale(1)}
+  .item-body{flex:1;min-width:0}
+  .item-title{display:flex;justify-content:space-between;gap:14px;align-items:baseline}
+  .item-name{font-weight:600;font-size:1.02rem}
+  .item-price{font-family:"Fraunces",serif;font-size:1.1rem;font-weight:500;white-space:nowrap}
+  .item-price .per{font-family:"Manrope";font-size:12px;color:var(--ink-soft);font-weight:500}
+  .item-desc{font-size:13.5px;color:var(--ink-soft);margin-top:5px;max-width:54ch}
+
+  /* bônus / cortesia */
+  .bonus{
+    border:1px dashed var(--accent);background:var(--accent-tint);border-radius:var(--radius);
+    padding:18px 20px;display:flex;gap:16px;align-items:flex-start;margin-bottom:12px;
+  }
+  .bonus .gift{flex:none;width:24px;height:24px;margin-top:2px;color:var(--accent)}
+  .bonus .item-price{color:var(--accent-deep)}
+  .strike{color:var(--ink-faint);text-decoration:line-through;font-family:"Manrope";font-size:13px;font-weight:500;margin-right:8px}
+  .pill-free{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--accent);padding:2px 9px;border-radius:20px;font-weight:600}
+
+  /* ---------- SUMMARY ---------- */
+  aside.summary{position:sticky;top:24px}
+  .panel{background:var(--panel);color:var(--panel-ink);border-radius:18px;padding:28px 26px;box-shadow:0 30px 60px -30px rgba(28,26,22,.6)}
+  .panel h3{font-family:"Fraunces",serif;font-weight:500;font-size:1.25rem;margin-bottom:2px}
+  .panel .sub{font-size:12.5px;color:var(--panel-soft);margin-bottom:20px}
+  .sum-list{list-style:none;display:flex;flex-direction:column;gap:11px;min-height:24px}
+  .sum-list li{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;color:var(--panel-ink)}
+  .sum-list li .l{color:var(--panel-soft)}
+  .sum-list li.gift-line .l{color:var(--panel-ink)}
+  .sum-list li .strike2{color:var(--panel-soft);text-decoration:line-through;font-size:12px;margin-right:6px}
+  .sum-empty{font-size:13.5px;color:var(--panel-soft);font-style:italic}
+  .divider{height:1px;background:var(--panel-line);margin:20px 0}
+  .total-row{display:flex;justify-content:space-between;align-items:baseline}
+  .total-row .tl{font-size:13px;color:var(--panel-soft);letter-spacing:.04em}
+  .total-row .tv{font-family:"Fraunces",serif;font-weight:500;letter-spacing:-.01em;display:inline-block;transform-origin:right center}
+  .bump{animation:bump .34s var(--ease)}
+  @keyframes bump{0%{transform:scale(1)}38%{transform:scale(1.05)}100%{transform:scale(1)}}
+  @media(prefers-reduced-motion:reduce){.bump{animation:none}}
+  .total-unico .tv{font-size:2.35rem;color:#fff}
+  .total-mensal{margin-top:14px}
+  .total-mensal .tv{font-size:1.35rem;color:var(--accent)}
+  .total-mensal .tv .per{font-family:"Manrope";font-size:12px;color:var(--panel-soft);font-weight:500}
+  .save-note{
+    margin-top:20px;font-size:12px;color:var(--panel-soft);
+    border-top:1px solid var(--panel-line);padding-top:16px;line-height:1.5;
+  }
+  .save-note b{color:var(--accent)}
+  .validity{margin-top:14px;font-size:11.5px;color:var(--panel-soft)}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:1px solid var(--line);padding:34px 0 70px;color:var(--ink-soft);font-size:13.5px}
+  footer .fname{font-family:"Fraunces",serif;color:var(--ink);font-size:1.05rem}
+  footer a{color:var(--accent-deep);text-decoration:none;border-bottom:1px solid var(--line);transition:.2s}
+  footer a:hover{border-color:var(--accent-deep)}
+
+  /* mobile sticky bar */
+  .mbar{
+    display:none;position:fixed;left:0;right:0;bottom:0;z-index:5;
+    background:var(--panel);color:var(--panel-ink);padding:13px 20px;
+    justify-content:space-between;align-items:center;
+    box-shadow:0 -12px 30px -18px rgba(0,0,0,.6);
+  }
+  .mbar .ml{font-size:11px;color:var(--panel-soft);letter-spacing:.04em;text-transform:uppercase}
+  .mbar .mv{font-family:"Fraunces",serif;font-size:1.3rem;color:#fff}
+  .mbar .mv small{font-size:.7rem;color:var(--accent)}
+
+  /* entrada */
+  .reveal{opacity:0;transform:translateY(16px);animation:rise .7s var(--ease) forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:880px){
+    .layout{grid-template-columns:1fr;gap:24px}
+    aside.summary{position:static;order:-1}
+    .presets{grid-template-columns:1fr}
+    header.hero{padding:48px 0 28px}
+    body{padding-bottom:74px}
+    .mbar{display:flex}
+  }
+
+  @media print{
+    body::before,.mbar,.presets-block{display:none}
+    .item:hover,.preset:hover{transform:none;box-shadow:none}
+    aside.summary{position:static}
+    .panel{box-shadow:none;border:1px solid #ccc}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero reveal">
+    <div class="kicker">Proposta de consultoria · Bruno Falci</div>
+    <h1>Academia modular para <em>condomínios</em></h1>
+    <p class="lead">Monte sua proposta do seu jeito. Selecione o que faz sentido e veja o investimento atualizar ao vivo.</p>
+    <div class="meta">
+      <span>Para <b>Lucca Geraldello</b></span>
+      <span>16 de junho de 2026</span>
+      <span>Proposta válida por <b>15 dias</b></span>
+    </div>
+  </header>
+
+  <section class="presets-block reveal" style="animation-delay:.08s">
+    <div class="sec-label">Comece por um pacote (e ajuste à vontade)</div>
+    <div class="presets" id="presets"></div>
+  </section>
+
+  <div class="layout">
+    <div class="config-col">
+
+      <div class="group reveal" style="animation-delay:.12s">
+        <h2>Incluso, sempre</h2>
+        <p class="ghint">A base do projeto, oferecida como cortesia neste trabalho.</p>
+        <div id="bonus"></div>
+      </div>
+
+      <div class="group reveal" style="animation-delay:.16s">
+        <h2>Itens do projeto</h2>
+        <p class="ghint">Os entregáveis principais. Inclua ou tire conforme a prioridade.</p>
+        <div id="grp-base"></div>
+      </div>
+
+      <div class="group reveal" style="animation-delay:.2s">
+        <h2>Add-ons opcionais</h2>
+        <p class="ghint">Camadas extras pra somar quando quiser ir além.</p>
+        <div id="grp-addon"></div>
+      </div>
+
+      <div class="group reveal" style="animation-delay:.24s">
+        <h2>Plano recorrente</h2>
+        <p class="ghint">Pra manter o site vivo e crescendo depois do lançamento.</p>
+        <div id="grp-rec"></div>
+      </div>
+
+    </div>
+
+    <aside class="summary reveal" style="animation-delay:.18s">
+      <div class="panel">
+        <h3>Resumo do investimento</h3>
+        <p class="sub">Atualiza conforme você monta</p>
+        <ul class="sum-list" id="sumList"></ul>
+        <div class="divider"></div>
+        <div class="total-row total-unico">
+          <span class="tl">Investimento único</span>
+          <span class="tv" id="totalUnico">R$ 0</span>
+        </div>
+        <div class="total-row total-mensal" id="mensalRow" style="display:none">
+          <span class="tl">Manutenção mensal</span>
+          <span class="tv" id="totalMensal">R$ 0<span class="per">/mês</span></span>
+        </div>
+        <div class="save-note" id="saveNote"></div>
+        <div class="validity">Valores em reais. Custos de terceiros (domínio, registro de marca, hospedagem) não inclusos.</div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="reveal">
+    <div class="fname">Bruno Falci</div>
+    <p style="margin-top:6px">Dúvidas sobre a proposta? É só me chamar.
+      <!-- EDITAR: coloque seu contato real abaixo -->
+      <a id="contato" href="#">seu-contato-aqui</a>
+    </p>
+  </footer>
+
+</div>
+
+<div class="mbar" id="mbar" onclick="document.querySelector('aside.summary').scrollIntoView({behavior:'smooth'})">
+  <div><div class="ml">Investimento único</div><div class="mv" id="mUnico">R$ 0</div></div>
+  <div style="text-align:right"><div class="ml">Mensal</div><div class="mv" id="mMensal"><small>R$ 0</small></div></div>
+</div>
+
+<script>
+/* ===========================================================================
+   CONFIG: edite TUDO aqui. Precos em reais.
+   Itens marcados com  // sugerido  têm valor proposto pelo Bruno; confirme.
+   =========================================================================== */
+const CONFIG = {
+  contato: "seu-email@ou-whatsapp",            // EDITAR: vira o link do rodapé
+  bonus: {
+    nome: "Naming + Identidade visual",
+    de: 3000,                                   // âncora "de/por" (cortesia). Ajuste se quiser.
+    desc: "Trabalho conjunto de nome, símbolo, paleta e tipografia. Incluído como cortesia neste projeto."
+  },
+  itens: [
+    // --- base ---
+    { id:"apresentacao", grupo:"base", nome:"Apresentação institucional", preco:1500, recorrente:false,
+      desc:"Deck profissional pra você apresentar a síndicos e assembleias, com problema, solução, planos e diferenciais." },
+    { id:"site", grupo:"base", nome:"Site MVP institucional", preco:4500, recorrente:false,
+      desc:"Site no ar com chamada de solicitar orçamento, estrutura dos planos e base de SEO. Modelo de lançar rápido e ir refinando." },
+
+    // --- add-ons (valores sugeridos, confirme antes de enviar) ---
+    { id:"configurador", grupo:"addon", nome:'Configurador "monte sua academia" no site', preco:2500, recorrente:false, // sugerido
+      desc:"A própria experiência de carrinho que o condomínio usa pra montar a academia, direto no site." },
+    { id:"seo", grupo:"addon", nome:"SEO para Google e busca por IA", preco:1500, recorrente:false, // sugerido
+      desc:"Otimização pra aparecer quando síndicos pesquisarem no Google e em assistentes de IA." },
+    { id:"pagina", grupo:"addon", nome:"Página ou landing extra", preco:800, recorrente:false, // sugerido
+      desc:"Uma página adicional, por exemplo campanha sazonal ou parceria." },
+    { id:"copy", grupo:"addon", nome:"Copywriting de páginas", preco:700, recorrente:false, // sugerido
+      desc:"Textos de venda escritos pra converter visitante em contato." },
+
+    // --- recorrente ---
+    { id:"manutencao", grupo:"rec", nome:"Manutenção mensal", preco:600, recorrente:true,
+      desc:"Atualizações, SEO contínuo, ajustes e suporte. Começa depois do site no ar." },
+  ],
+  presets: {
+    essencial: { nome:"Essencial", desc:"Pra chegar rápido na assembleia.", itens:["apresentacao"] },
+    completo:  { nome:"Completo",  desc:"Marca, apresentação e site no ar.", tag:"Recomendado", itens:["apresentacao","site","manutencao"] },
+    premium:   { nome:"Premium",   desc:"Tudo, com configurador e SEO.", itens:["apresentacao","site","manutencao","configurador","seo"] },
+  },
+  defaultPreset: "completo",
+};
+
+/* =================== motor =================== */
+const brl = n => new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",minimumFractionDigits:0}).format(n);
+const byId = id => CONFIG.itens.find(i=>i.id===id);
+const selected = new Set();
+let activePreset = null;
+const checkSVG = '<svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="%23fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'.replace(/%23/g,"#");
+
+function itemCardHTML(it){
+  const price = it.recorrente
+    ? `${brl(it.preco)}<span class="per">/mês</span>`
+    : brl(it.preco);
+  return `<button class="item" data-id="${it.id}" aria-pressed="false">
+      <span class="check">${checkSVG}</span>
+      <span class="item-body">
+        <span class="item-title">
+          <span class="item-name">${it.nome}</span>
+          <span class="item-price">${price}</span>
+        </span>
+        <span class="item-desc">${it.desc}</span>
+      </span>
+    </button>`;
+}
+
+function build(){
+  // bônus
+  document.getElementById("bonus").innerHTML = `
+    <div class="bonus">
+      <svg class="gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <rect x="3" y="8" width="18" height="13" rx="1.5"/><path d="M3 12h18M12 8v13"/>
+        <path d="M12 8S10 3 7.5 4 9.5 8 12 8zM12 8s2-5 4.5-4-1.5 4-4.5 4z"/>
+      </svg>
+      <span class="item-body">
+        <span class="item-title">
+          <span class="item-name">${CONFIG.bonus.nome}</span>
+          <span class="item-price"><span class="strike">${brl(CONFIG.bonus.de)}</span><span class="pill-free">Cortesia</span></span>
+        </span>
+        <span class="item-desc">${CONFIG.bonus.desc}</span>
+      </span>
+    </div>`;
+
+  // presets
+  document.getElementById("presets").innerHTML = Object.entries(CONFIG.presets).map(([k,p])=>`
+    <button class="preset" data-preset="${k}">
+      ${p.tag?`<span class="ptag">${p.tag}</span>`:""}
+      <div class="pname">${p.nome}</div>
+      <div class="pdesc">${p.desc}</div>
+    </button>`).join("");
+
+  // itens por grupo
+  const fill = (sel,grupo)=> document.getElementById(sel).innerHTML =
+    CONFIG.itens.filter(i=>i.grupo===grupo).map(itemCardHTML).join("");
+  fill("grp-base","base"); fill("grp-addon","addon"); fill("grp-rec","rec");
+
+  // listeners
+  document.querySelectorAll(".item").forEach(el=>
+    el.addEventListener("click",()=>toggle(el.dataset.id)));
+  document.querySelectorAll(".preset").forEach(el=>
+    el.addEventListener("click",()=>applyPreset(el.dataset.preset)));
+
+  // contato no rodapé
+  const c = document.getElementById("contato");
+  c.textContent = CONFIG.contato;
+  c.href = CONFIG.contato.includes("@") ? "mailto:"+CONFIG.contato : "#";
+
+  applyPreset(CONFIG.defaultPreset);
+}
+
+function toggle(id){
+  selected.has(id) ? selected.delete(id) : selected.add(id);
+  activePreset = null;
+  render();
+}
+function applyPreset(name){
+  selected.clear();
+  CONFIG.presets[name].itens.forEach(id=>selected.add(id));
+  activePreset = name;
+  render();
+}
+
+/* Total é valor financeiro: escreve direto (sempre correto). A leve pulsada
+   é só enriquecimento via CSS, sem depender de requestAnimationFrame. */
+function setValue(el, to, suffix=""){
+  el.innerHTML = brl(to) + suffix;
+  el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump");
+}
+
+function render(){
+  // estados visuais dos cards
+  document.querySelectorAll(".item").forEach(el=>{
+    const on = selected.has(el.dataset.id);
+    el.classList.toggle("on",on);
+    el.setAttribute("aria-pressed",on);
+  });
+  document.querySelectorAll(".preset").forEach(el=>
+    el.classList.toggle("active", el.dataset.preset===activePreset));
+
+  // totais
+  let unico = 0, mensal = 0;
+  const linhasUnico = [], linhasMensal = [];
+  CONFIG.itens.forEach(it=>{
+    if(!selected.has(it.id)) return;
+    if(it.recorrente){ mensal += it.preco; linhasMensal.push(it); }
+    else { unico += it.preco; linhasUnico.push(it); }
+  });
+
+  // lista do resumo
+  const list = document.getElementById("sumList");
+  let html = `<li class="gift-line"><span class="l">${CONFIG.bonus.nome}</span>
+      <span><span class="strike2">${brl(CONFIG.bonus.de)}</span>Cortesia</span></li>`;
+  linhasUnico.forEach(it=> html += `<li><span class="l">${it.nome}</span><span>${brl(it.preco)}</span></li>`);
+  linhasMensal.forEach(it=> html += `<li><span class="l">${it.nome}</span><span>${brl(it.preco)}/mês</span></li>`);
+  if(!linhasUnico.length && !linhasMensal.length)
+    html += `<li class="sum-empty">Selecione itens pra montar a proposta.</li>`;
+  list.innerHTML = html;
+
+  // números (escrita direta = sempre correto)
+  setValue(document.getElementById("totalUnico"), unico);
+  const mensalRow = document.getElementById("mensalRow");
+  if(mensal>0){
+    mensalRow.style.display = "flex";
+    setValue(document.getElementById("totalMensal"), mensal, '<span class="per">/mês</span>');
+  } else { mensalRow.style.display = "none"; }
+
+  // economia em cortesia
+  document.getElementById("saveNote").innerHTML =
+    `Você economiza <b>${brl(CONFIG.bonus.de)}</b> em naming e identidade visual, inclusos como cortesia.`;
+
+  // barra mobile
+  document.getElementById("mUnico").textContent = brl(unico);
+  document.getElementById("mMensal").innerHTML = mensal>0 ? `<small>${brl(mensal)}/mês</small>` : `<small>R$ 0</small>`;
+}
+
+build();
+</script>
+</body>
+</html>
