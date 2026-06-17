@@ -126,6 +126,11 @@
   .item-price{font-family:"Fraunces",serif;font-size:1.1rem;font-weight:500;white-space:nowrap}
   .item-price .per{font-family:"Manrope";font-size:12px;color:var(--ink-soft);font-weight:500}
   .item-desc{font-size:13.5px;color:var(--ink-soft);margin-top:5px;max-width:54ch}
+  .ti-left{display:inline-flex;align-items:center;gap:9px;flex-wrap:wrap;min-width:0}
+  .rec-badge{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-deep);background:var(--accent-tint);border:1px solid var(--accent);padding:2px 7px;border-radius:20px;font-weight:700;white-space:nowrap}
+  .nudge-line{display:none;margin-top:9px;font-size:12.5px;color:var(--accent-deep);font-weight:600}
+  .item.nudge{border-color:var(--accent);background:var(--accent-tint)}
+  .item.nudge .nudge-line{display:block}
 
   /* bônus / cortesia */
   .bonus{
@@ -290,41 +295,38 @@
 
 <script>
 /* ===========================================================================
-   CONFIG: edite TUDO aqui. Precos em reais.
-   Itens marcados com  // sugerido  têm valor proposto pelo Bruno; confirme.
+   CONFIG: edite TUDO aqui (preços, textos, contato). Preços em reais.
    =========================================================================== */
 const CONFIG = {
   contato: "seu-email@ou-whatsapp",            // EDITAR: vira o link do rodapé
   bonus: {
     nome: "Naming + Identidade visual",
-    de: 3000,                                   // âncora "de/por" (cortesia). Ajuste se quiser.
+    de: 2000,                                   // âncora "de/por" (cortesia). Ajuste se quiser.
     desc: "Trabalho conjunto de nome, símbolo, paleta e tipografia. Incluído como cortesia neste projeto."
   },
   itens: [
-    // --- base ---
-    { id:"apresentacao", grupo:"base", nome:"Apresentação institucional", preco:1500, recorrente:false,
+    // --- itens do projeto (grupo base) ---
+    { id:"apresentacao", grupo:"base", nome:"Apresentação institucional", preco:800, recorrente:false,
       desc:"Deck profissional pra você apresentar a síndicos e assembleias, com problema, solução, planos e diferenciais." },
-    { id:"site", grupo:"base", nome:"Site MVP institucional", preco:4500, recorrente:false,
+    { id:"site", grupo:"base", nome:"Site MVP institucional", preco:3500, recorrente:false,
       desc:"Site no ar com chamada de solicitar orçamento, estrutura dos planos e base de SEO. Modelo de lançar rápido e ir refinando." },
+    { id:"configurador", grupo:"base", nome:'Configurador "monte sua academia"', preco:1000, recorrente:false, recomendado:true,
+      desc:"A mesma experiência de carrinho que o condomínio vai usar pra montar a academia. Completa o seu site e demonstra o produto na prática." },
 
-    // --- add-ons (valores sugeridos, confirme antes de enviar) ---
-    { id:"configurador", grupo:"addon", nome:'Configurador "monte sua academia" no site', preco:2500, recorrente:false, // sugerido
-      desc:"A própria experiência de carrinho que o condomínio usa pra montar a academia, direto no site." },
-    { id:"seo", grupo:"addon", nome:"SEO para Google e busca por IA", preco:1500, recorrente:false, // sugerido
+    // --- add-ons opcionais ---
+    { id:"seo", grupo:"addon", nome:"SEO para Google e busca por IA", preco:500, recorrente:false,
       desc:"Otimização pra aparecer quando síndicos pesquisarem no Google e em assistentes de IA." },
-    { id:"pagina", grupo:"addon", nome:"Página ou landing extra", preco:800, recorrente:false, // sugerido
+    { id:"pagina", grupo:"addon", nome:"Página ou landing extra", preco:800, recorrente:false,
       desc:"Uma página adicional, por exemplo campanha sazonal ou parceria." },
-    { id:"copy", grupo:"addon", nome:"Copywriting de páginas", preco:700, recorrente:false, // sugerido
-      desc:"Textos de venda escritos pra converter visitante em contato." },
 
     // --- recorrente ---
-    { id:"manutencao", grupo:"rec", nome:"Manutenção mensal", preco:600, recorrente:true,
+    { id:"manutencao", grupo:"rec", nome:"Manutenção mensal", preco:1000, recorrente:true,
       desc:"Atualizações, SEO contínuo, ajustes e suporte. Começa depois do site no ar." },
   ],
   presets: {
     essencial: { nome:"Essencial", desc:"Pra chegar rápido na assembleia.", itens:["apresentacao"] },
-    completo:  { nome:"Completo",  desc:"Marca, apresentação e site no ar.", tag:"Recomendado", itens:["apresentacao","site","manutencao"] },
-    premium:   { nome:"Premium",   desc:"Tudo, com configurador e SEO.", itens:["apresentacao","site","manutencao","configurador","seo"] },
+    completo:  { nome:"Completo",  desc:"Marca, apresentação e o site completo no ar.", tag:"Recomendado", itens:["apresentacao","site","configurador","manutencao"] },
+    premium:   { nome:"Premium",   desc:"Tudo: site completo, SEO e página extra.", itens:["apresentacao","site","configurador","seo","pagina","manutencao"] },
   },
   defaultPreset: "completo",
 };
@@ -340,14 +342,17 @@ function itemCardHTML(it){
   const price = it.recorrente
     ? `${brl(it.preco)}<span class="per">/mês</span>`
     : brl(it.preco);
+  const badge = it.recomendado ? `<span class="rec-badge">Recomendado</span>` : "";
+  const nudge = it.recomendado ? `<span class="nudge-line">Seu site fica completo com o configurador.</span>` : "";
   return `<button class="item" data-id="${it.id}" aria-pressed="false">
       <span class="check">${checkSVG}</span>
       <span class="item-body">
         <span class="item-title">
-          <span class="item-name">${it.nome}</span>
+          <span class="ti-left"><span class="item-name">${it.nome}</span>${badge}</span>
           <span class="item-price">${price}</span>
         </span>
         <span class="item-desc">${it.desc}</span>
+        ${nudge}
       </span>
     </button>`;
 }
@@ -424,6 +429,10 @@ function render(){
   });
   document.querySelectorAll(".preset").forEach(el=>
     el.classList.toggle("active", el.dataset.preset===activePreset));
+
+  // nudge: induz o configurador quando o site está marcado e ele não
+  const cfg = document.querySelector('.item[data-id="configurador"]');
+  if(cfg) cfg.classList.toggle("nudge", selected.has("site") && !selected.has("configurador"));
 
   // totais
   let unico = 0, mensal = 0;
