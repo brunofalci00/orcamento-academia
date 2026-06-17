@@ -331,7 +331,7 @@
    incluso a partir do Completo (destrava quando o site é selecionado).
    =========================================================================== */
 const CONFIG = {
-  contato: "seu-email@ou-whatsapp",            // EDITAR: vira o link do rodapé
+  contato: "11997627772",                      // e-mail ou WhatsApp: vira o link do rodapé
 
   inclusos: [
     { id:"identidade", nome:"Naming + Identidade visual", de:2000, sempre:true,
@@ -432,10 +432,21 @@ function build(){
   document.querySelectorAll(".preset").forEach(el=>
     el.addEventListener("click",()=>applyPreset(el.dataset.preset)));
 
-  // contato no rodapé
+  // contato no rodapé: e-mail vira mailto; telefone vira WhatsApp formatado
   const c = document.getElementById("contato");
-  c.textContent = CONFIG.contato;
-  c.href = CONFIG.contato.includes("@") ? "mailto:"+CONFIG.contato : "#";
+  const ct = CONFIG.contato.trim();
+  if(ct.includes("@")){
+    c.textContent = ct; c.href = "mailto:" + ct;
+  } else {
+    const digits = ct.replace(/\D/g,"");
+    const wa = digits.length > 11 ? digits : "55" + digits;
+    const d = digits.length > 11 ? digits.slice(-11) : digits;
+    const disp = d.length === 11 ? `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`
+               : d.length === 10 ? `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}` : ct;
+    c.textContent = "WhatsApp " + disp;
+    c.href = "https://wa.me/" + wa;
+    c.target = "_blank"; c.rel = "noopener";
+  }
 
   applyPreset(CONFIG.defaultPreset);
 }
