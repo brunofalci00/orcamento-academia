@@ -11,7 +11,7 @@
 <style>
   /* =========================================================================
      ORCAMENTO INTERATIVO: Academia modular para condominios
-     Para editar valores e textos, mexa só no objeto CONFIG no início do <script>.
+     Para editar valores e textos, mexa so no objeto CONFIG no inicio do <script>.
      ========================================================================= */
   :root{
     --bg:#F3F0E8;
@@ -42,7 +42,6 @@
     position:relative;
     overflow-x:hidden;
   }
-  /* textura sutil de grão */
   body::before{
     content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
@@ -95,7 +94,7 @@
   }
 
   /* ---------- LAYOUT ---------- */
-  .layout{display:grid;grid-template-columns:1.55fr 1fr;gap:40px;align-items:start;padding:36px 0 80px}
+  .layout{display:grid;grid-template-columns:1.55fr 1fr;gap:40px;align-items:start;padding:36px 0 40px}
   .config-col{min-width:0}
   .group{margin-bottom:34px}
   .group h2{
@@ -125,22 +124,26 @@
   .item-name{font-weight:600;font-size:1.02rem}
   .item-price{font-family:"Fraunces",serif;font-size:1.1rem;font-weight:500;white-space:nowrap}
   .item-price .per{font-family:"Manrope";font-size:12px;color:var(--ink-soft);font-weight:500}
-  .item-desc{font-size:13.5px;color:var(--ink-soft);margin-top:5px;max-width:54ch}
+  .item-desc{font-size:13.5px;color:var(--ink-soft);margin-top:5px;max-width:58ch}
   .ti-left{display:inline-flex;align-items:center;gap:9px;flex-wrap:wrap;min-width:0}
   .rec-badge{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-deep);background:var(--accent-tint);border:1px solid var(--accent);padding:2px 7px;border-radius:20px;font-weight:700;white-space:nowrap}
   .nudge-line{display:none;margin-top:9px;font-size:12.5px;color:var(--accent-deep);font-weight:600}
   .item.nudge{border-color:var(--accent);background:var(--accent-tint)}
   .item.nudge .nudge-line{display:block}
 
-  /* bônus / cortesia */
-  .bonus{
+  /* ---------- INCLUSOS (cortesia / incluso / travado) ---------- */
+  .incl{
     border:1px dashed var(--accent);background:var(--accent-tint);border-radius:var(--radius);
-    padding:18px 20px;display:flex;gap:16px;align-items:flex-start;margin-bottom:12px;
+    padding:18px 20px;display:flex;gap:16px;align-items:flex-start;margin-bottom:12px;transition:.22s var(--ease);
   }
-  .bonus .gift{flex:none;width:24px;height:24px;margin-top:2px;color:var(--accent)}
-  .bonus .item-price{color:var(--accent-deep)}
+  .incl .gift{flex:none;width:24px;height:24px;margin-top:2px;color:var(--accent)}
+  .incl .item-price{color:var(--accent-deep)}
+  .incl.locked{border-color:var(--line);background:transparent;opacity:.72}
+  .incl.locked .gift{color:var(--ink-faint)}
+  .incl.locked .item-price{color:var(--ink-faint)}
   .strike{color:var(--ink-faint);text-decoration:line-through;font-family:"Manrope";font-size:13px;font-weight:500;margin-right:8px}
-  .pill-free{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--accent);padding:2px 9px;border-radius:20px;font-weight:600}
+  .pill-free{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--accent);padding:2px 9px;border-radius:20px;font-weight:600;white-space:nowrap}
+  .pill-lock{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);background:var(--card);border:1px solid var(--line);padding:2px 9px;border-radius:20px;font-weight:600;white-space:nowrap}
 
   /* ---------- SUMMARY ---------- */
   aside.summary{position:sticky;top:24px}
@@ -164,15 +167,26 @@
   .total-mensal{margin-top:14px}
   .total-mensal .tv{font-size:1.35rem;color:var(--accent)}
   .total-mensal .tv .per{font-family:"Manrope";font-size:12px;color:var(--panel-soft);font-weight:500}
-  .save-note{
-    margin-top:20px;font-size:12px;color:var(--panel-soft);
-    border-top:1px solid var(--panel-line);padding-top:16px;line-height:1.5;
-  }
-  .save-note b{color:var(--accent)}
-  .validity{margin-top:14px;font-size:11.5px;color:var(--panel-soft)}
+  .vstack{margin-top:20px;border-top:1px solid var(--panel-line);padding-top:16px}
+  .vs-line{display:flex;justify-content:space-between;align-items:baseline}
+  .vs-l{font-size:13px;color:var(--panel-soft);letter-spacing:.04em}
+  .vs-big{font-family:"Fraunces",serif;font-weight:500;font-size:1.5rem;color:var(--accent);display:inline-block;transform-origin:right center}
+  .vs-note{margin-top:7px;font-size:12px;color:var(--panel-soft);line-height:1.5}
+  .vs-note b{color:var(--accent)}
+  .validity{margin-top:16px;font-size:11.5px;color:var(--panel-soft)}
+
+  /* ---------- COMO FUNCIONA ---------- */
+  .how{padding:38px 0 10px;border-top:1px solid var(--line)}
+  .how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:4px}
+  .step{display:flex;gap:12px;align-items:flex-start}
+  .step-n{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--accent);color:var(--accent-deep);display:grid;place-items:center;font-weight:600;font-size:14px;font-family:"Fraunces",serif}
+  .step b{font-size:14px}
+  .step p{font-size:12.5px;color:var(--ink-soft);margin-top:3px}
+  .cred{margin-top:26px;font-size:13.5px;color:var(--ink-soft);max-width:74ch}
+  .cred b{color:var(--ink)}
 
   /* ---------- FOOTER ---------- */
-  footer{border-top:1px solid var(--line);padding:34px 0 70px;color:var(--ink-soft);font-size:13.5px}
+  footer{border-top:1px solid var(--line);padding:30px 0 70px;color:var(--ink-soft);font-size:13.5px;margin-top:30px}
   footer .fname{font-family:"Fraunces",serif;color:var(--ink);font-size:1.05rem}
   footer a{color:var(--accent-deep);text-decoration:none;border-bottom:1px solid var(--line);transition:.2s}
   footer a:hover{border-color:var(--accent-deep)}
@@ -188,7 +202,6 @@
   .mbar .mv{font-family:"Fraunces",serif;font-size:1.3rem;color:#fff}
   .mbar .mv small{font-size:.7rem;color:var(--accent)}
 
-  /* entrada */
   .reveal{opacity:0;transform:translateY(16px);animation:rise .7s var(--ease) forwards}
   @keyframes rise{to{opacity:1;transform:none}}
 
@@ -197,6 +210,7 @@
     .layout{grid-template-columns:1fr;gap:24px}
     aside.summary{position:static;order:-1}
     .presets{grid-template-columns:1fr}
+    .how-steps{grid-template-columns:1fr 1fr}
     header.hero{padding:48px 0 28px}
     body{padding-bottom:74px}
     .mbar{display:flex}
@@ -216,7 +230,7 @@
   <header class="hero reveal">
     <div class="kicker">Proposta de consultoria · Bruno Falci</div>
     <h1>Academia modular para <em>condomínios</em></h1>
-    <p class="lead">Monte sua proposta do seu jeito. Selecione o que faz sentido e veja o investimento atualizar ao vivo.</p>
+    <p class="lead">Monte sua proposta do seu jeito. Selecione o que faz sentido e veja o valor atualizar ao vivo.</p>
     <div class="meta">
       <span>Para <b>Lucca Geraldello</b></span>
       <span>16 de junho de 2026</span>
@@ -233,9 +247,9 @@
     <div class="config-col">
 
       <div class="group reveal" style="animation-delay:.12s">
-        <h2>Incluso, sempre</h2>
-        <p class="ghint">A base do projeto, oferecida como cortesia neste trabalho.</p>
-        <div id="bonus"></div>
+        <h2>Inclusos no projeto</h2>
+        <p class="ghint">A identidade é cortesia sempre. Automação e pesquisa entram inclusas quando você adiciona o site.</p>
+        <div id="inclusos"></div>
       </div>
 
       <div class="group reveal" style="animation-delay:.16s">
@@ -272,16 +286,33 @@
           <span class="tl">Manutenção mensal</span>
           <span class="tv" id="totalMensal">R$ 0<span class="per">/mês</span></span>
         </div>
-        <div class="save-note" id="saveNote"></div>
+        <div class="vstack">
+          <div class="vs-line">
+            <span class="vs-l">Valor entregue</span>
+            <span class="vs-big" id="valorEntregue">R$ 0</span>
+          </div>
+          <div class="vs-note" id="vsNote"></div>
+        </div>
         <div class="validity">Valores em reais. Custos de terceiros (domínio, registro de marca, hospedagem) não inclusos.</div>
       </div>
     </aside>
   </div>
 
+  <section class="how reveal">
+    <div class="sec-label">Como funciona</div>
+    <div class="how-steps">
+      <div class="step"><span class="step-n">1</span><div><b>Aprovação</b><p>Você escolhe o pacote e a gente alinha o escopo.</p></div></div>
+      <div class="step"><span class="step-n">2</span><div><b>Nome + pesquisa</b><p>Pesquisa de mercado e definição do nome, com a sua validação.</p></div></div>
+      <div class="step"><span class="step-n">3</span><div><b>Identidade</b><p>Logo, paleta e tipografia da marca.</p></div></div>
+      <div class="step"><span class="step-n">4</span><div><b>Apresentação + site</b><p>Deck institucional e site no ar, prontos pra assembleia.</p></div></div>
+    </div>
+    <p class="cred">Mesma metodologia aplicada na <b>Berkahn</b> (construtora em Light Steel Frame): marca, site, conteúdo e presença no Google, gerando contato de forma recorrente.</p>
+  </section>
+
   <footer class="reveal">
     <div class="fname">Bruno Falci</div>
     <p style="margin-top:6px">Dúvidas sobre a proposta? É só me chamar.
-      <!-- EDITAR: coloque seu contato real abaixo -->
+      <!-- EDITAR: coloque seu contato real no CONFIG.contato -->
       <a id="contato" href="#">seu-contato-aqui</a>
     </p>
   </footer>
@@ -296,33 +327,41 @@
 <script>
 /* ===========================================================================
    CONFIG: edite TUDO aqui (preços, textos, contato). Preços em reais.
+   Inclusos: "sempre:true" = cortesia em qualquer pacote; "sempre:false" =
+   incluso a partir do Completo (destrava quando o site é selecionado).
    =========================================================================== */
 const CONFIG = {
   contato: "seu-email@ou-whatsapp",            // EDITAR: vira o link do rodapé
-  bonus: {
-    nome: "Naming + Identidade visual",
-    de: 2000,                                   // âncora "de/por" (cortesia). Ajuste se quiser.
-    desc: "Trabalho conjunto de nome, símbolo, paleta e tipografia. Incluído como cortesia neste projeto."
-  },
+
+  inclusos: [
+    { id:"identidade", nome:"Naming + Identidade visual", de:2000, sempre:true,
+      desc:"Nome, símbolo (logo), paleta de cores, tipografia e kit de aplicações. Trabalho conjunto, do seu jeito." },
+    { id:"automacao", nome:"Automação de captura de leads", de:800, sempre:false,
+      desc:"O formulário do site dispara um e-mail pra você a cada novo contato e salva tudo numa planilha organizada, automático. Nenhum lead se perde." },
+    { id:"pesquisa", nome:"Pesquisa de mercado + deck de insights", de:1500, sempre:false,
+      desc:"Concorrência, diferenciais, naming e paleta numa apresentação de insights. Embasa a marca e te arma de dados pra defender o projeto na assembleia." },
+  ],
+
   itens: [
     // --- itens do projeto (grupo base) ---
     { id:"apresentacao", grupo:"base", nome:"Apresentação institucional", preco:800, recorrente:false,
-      desc:"Deck profissional pra você apresentar a síndicos e assembleias, com problema, solução, planos e diferenciais." },
+      desc:"Deck institucional (cerca de 10 a 15 slides) com a narrativa de problema, solução, planos, diferenciais e contato. Pronto pra apresentar a síndicos e à assembleia." },
     { id:"site", grupo:"base", nome:"Site MVP institucional", preco:3500, recorrente:false,
-      desc:"Site no ar com chamada de solicitar orçamento, estrutura dos planos e base de SEO. Modelo de lançar rápido e ir refinando." },
+      desc:"Site no ar: home, planos (Básico, Médio e Prime), como funciona, sobre e chamada de solicitar orçamento. Responsivo, rápido e com base de SEO. Modelo de lançar e ir refinando." },
     { id:"configurador", grupo:"base", nome:'Configurador "monte sua academia"', preco:1000, recorrente:false, recomendado:true,
-      desc:"A mesma experiência de carrinho que o condomínio vai usar pra montar a academia. Completa o seu site e demonstra o produto na prática." },
+      desc:"A mesma experiência de carrinho que o condomínio usa pra montar a academia (categoria + add-ons) e pedir orçamento. Completa o site e demonstra, na prática, o produto que você vende." },
 
     // --- add-ons opcionais ---
     { id:"seo", grupo:"addon", nome:"SEO para Google e busca por IA", preco:500, recorrente:false,
-      desc:"Otimização pra aparecer quando síndicos pesquisarem no Google e em assistentes de IA." },
+      desc:"Otimização on-page, palavras-chave de academia e condomínio, e estrutura pra aparecer no Google e em assistentes de IA quando síndicos pesquisarem." },
     { id:"pagina", grupo:"addon", nome:"Página ou landing extra", preco:800, recorrente:false,
-      desc:"Uma página adicional, por exemplo campanha sazonal ou parceria." },
+      desc:"Uma página dedicada além do site: por exemplo uma campanha sazonal, uma parceria ou um plano específico." },
 
     // --- recorrente ---
     { id:"manutencao", grupo:"rec", nome:"Manutenção mensal", preco:1000, recorrente:true,
-      desc:"Atualizações, SEO contínuo, ajustes e suporte. Começa depois do site no ar." },
+      desc:"Inclui: hospedagem e domínio monitorados; atualizações de conteúdo (textos, imagens, planos e preços); SEO contínuo; ajustes e correções; segurança, SSL e backups; relatório mensal de tráfego e contatos; suporte com canal direto. Começa depois do site no ar." },
   ],
+
   presets: {
     essencial: { nome:"Essencial", desc:"Pra chegar rápido na assembleia.", itens:["apresentacao"] },
     completo:  { nome:"Completo",  desc:"Marca, apresentação e o site completo no ar.", tag:"Recomendado", itens:["apresentacao","site","configurador","manutencao"] },
@@ -333,10 +372,10 @@ const CONFIG = {
 
 /* =================== motor =================== */
 const brl = n => new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",minimumFractionDigits:0}).format(n);
-const byId = id => CONFIG.itens.find(i=>i.id===id);
 const selected = new Set();
 let activePreset = null;
 const checkSVG = '<svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="%23fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'.replace(/%23/g,"#");
+const giftSVG = `<svg class="gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="8" width="18" height="13" rx="1.5"/><path d="M3 12h18M12 8v13"/><path d="M12 8S10 3 7.5 4 9.5 8 12 8zM12 8s2-5 4.5-4-1.5 4-4.5 4z"/></svg>`;
 
 function itemCardHTML(it){
   const price = it.recorrente
@@ -357,23 +396,23 @@ function itemCardHTML(it){
     </button>`;
 }
 
-function build(){
-  // bônus
-  document.getElementById("bonus").innerHTML = `
-    <div class="bonus">
-      <svg class="gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-        <rect x="3" y="8" width="18" height="13" rx="1.5"/><path d="M3 12h18M12 8v13"/>
-        <path d="M12 8S10 3 7.5 4 9.5 8 12 8zM12 8s2-5 4.5-4-1.5 4-4.5 4z"/>
-      </svg>
+function inclusoCardHTML(it, ativo){
+  const pill = it.sempre
+    ? `<span class="pill-free">Cortesia</span>`
+    : (ativo ? `<span class="pill-free">Incluso</span>` : `<span class="pill-lock">A partir do Completo</span>`);
+  return `<div class="incl ${ativo ? "" : "locked"}">
+      ${giftSVG}
       <span class="item-body">
         <span class="item-title">
-          <span class="item-name">${CONFIG.bonus.nome}</span>
-          <span class="item-price"><span class="strike">${brl(CONFIG.bonus.de)}</span><span class="pill-free">Cortesia</span></span>
+          <span class="item-name">${it.nome}</span>
+          <span class="item-price"><span class="strike">${brl(it.de)}</span>${pill}</span>
         </span>
-        <span class="item-desc">${CONFIG.bonus.desc}</span>
+        <span class="item-desc">${it.desc}</span>
       </span>
     </div>`;
+}
 
+function build(){
   // presets
   document.getElementById("presets").innerHTML = Object.entries(CONFIG.presets).map(([k,p])=>`
     <button class="preset" data-preset="${k}">
@@ -413,15 +452,15 @@ function applyPreset(name){
   render();
 }
 
-/* Total é valor financeiro: escreve direto (sempre correto). A leve pulsada
-   é só enriquecimento via CSS, sem depender de requestAnimationFrame. */
+/* Valores financeiros: escrita direta = sempre correto. A leve pulsada é
+   enriquecimento via CSS, sem depender de requestAnimationFrame. */
 function setValue(el, to, suffix=""){
   el.innerHTML = brl(to) + suffix;
   el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump");
 }
 
 function render(){
-  // estados visuais dos cards
+  // estados dos itens pagos
   document.querySelectorAll(".item").forEach(el=>{
     const on = selected.has(el.dataset.id);
     el.classList.toggle("on",on);
@@ -430,11 +469,17 @@ function render(){
   document.querySelectorAll(".preset").forEach(el=>
     el.classList.toggle("active", el.dataset.preset===activePreset));
 
-  // nudge: induz o configurador quando o site está marcado e ele não
+  // nudge do configurador
   const cfg = document.querySelector('.item[data-id="configurador"]');
   if(cfg) cfg.classList.toggle("nudge", selected.has("site") && !selected.has("configurador"));
 
-  // totais
+  // inclusos: o site destrava automação e pesquisa
+  const temSite = selected.has("site");
+  const inclAtivos = CONFIG.inclusos.filter(it => it.sempre || temSite);
+  document.getElementById("inclusos").innerHTML =
+    CONFIG.inclusos.map(it => inclusoCardHTML(it, it.sempre || temSite)).join("");
+
+  // totais pagos
   let unico = 0, mensal = 0;
   const linhasUnico = [], linhasMensal = [];
   CONFIG.itens.forEach(it=>{
@@ -443,17 +488,18 @@ function render(){
     else { unico += it.preco; linhasUnico.push(it); }
   });
 
-  // lista do resumo
+  // resumo
   const list = document.getElementById("sumList");
-  let html = `<li class="gift-line"><span class="l">${CONFIG.bonus.nome}</span>
-      <span><span class="strike2">${brl(CONFIG.bonus.de)}</span>Cortesia</span></li>`;
+  let html = "";
+  inclAtivos.forEach(it => html += `<li class="gift-line"><span class="l">${it.nome}</span>
+      <span><span class="strike2">${brl(it.de)}</span>${it.sempre?"Cortesia":"Incluso"}</span></li>`);
   linhasUnico.forEach(it=> html += `<li><span class="l">${it.nome}</span><span>${brl(it.preco)}</span></li>`);
   linhasMensal.forEach(it=> html += `<li><span class="l">${it.nome}</span><span>${brl(it.preco)}/mês</span></li>`);
   if(!linhasUnico.length && !linhasMensal.length)
-    html += `<li class="sum-empty">Selecione itens pra montar a proposta.</li>`;
+    html += `<li class="sum-empty">Adicione itens pra montar a proposta.</li>`;
   list.innerHTML = html;
 
-  // números (escrita direta = sempre correto)
+  // preços
   setValue(document.getElementById("totalUnico"), unico);
   const mensalRow = document.getElementById("mensalRow");
   if(mensal>0){
@@ -461,9 +507,12 @@ function render(){
     setValue(document.getElementById("totalMensal"), mensal, '<span class="per">/mês</span>');
   } else { mensalRow.style.display = "none"; }
 
-  // economia em cortesia
-  document.getElementById("saveNote").innerHTML =
-    `Você economiza <b>${brl(CONFIG.bonus.de)}</b> em naming e identidade visual, inclusos como cortesia.`;
+  // valor entregue vs investimento
+  const valorInclusos = inclAtivos.reduce((s,it)=>s+it.de,0);
+  setValue(document.getElementById("valorEntregue"), unico + valorInclusos);
+  const nomes = temSite ? "identidade, automação e pesquisa" : "identidade";
+  document.getElementById("vsNote").innerHTML =
+    `Inclui <b>${brl(valorInclusos)}</b> sem custo (${nomes}), além do que você investe acima.`;
 
   // barra mobile
   document.getElementById("mUnico").textContent = brl(unico);
