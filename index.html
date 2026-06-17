@@ -233,7 +233,7 @@
     <p class="lead">Monte sua proposta do seu jeito. Selecione o que faz sentido e veja o valor atualizar ao vivo.</p>
     <div class="meta">
       <span>Para <b>Lucca Geraldello</b></span>
-      <span>16 de junho de 2026</span>
+      <span>17 de junho de 2026</span>
       <span>Proposta válida por <b>15 dias</b></span>
     </div>
   </header>
@@ -334,11 +334,11 @@ const CONFIG = {
   contato: "11997627772",                      // e-mail ou WhatsApp: vira o link do rodapé
 
   inclusos: [
-    { id:"identidade", nome:"Naming + Identidade visual", de:2000, sempre:true,
+    { id:"identidade", nome:"Naming + Identidade visual", de:1000, sempre:true,
       desc:"Nome, símbolo (logo), paleta de cores, tipografia e kit de aplicações. Trabalho conjunto, do seu jeito." },
     { id:"automacao", nome:"Automação de captura de leads", de:800, sempre:false,
       desc:"O formulário do site dispara um e-mail pra você a cada novo contato e salva tudo numa planilha organizada, automático. Nenhum lead se perde." },
-    { id:"pesquisa", nome:"Pesquisa de mercado + deck de insights", de:1500, sempre:false,
+    { id:"pesquisa", nome:"Pesquisa de mercado + deck de insights", de:1000, sempre:false,
       desc:"Concorrência, diferenciais, naming e paleta numa apresentação de insights. Embasa a marca e te arma de dados pra defender o projeto na assembleia." },
   ],
 
@@ -346,7 +346,7 @@ const CONFIG = {
     // --- itens do projeto (grupo base) ---
     { id:"apresentacao", grupo:"base", nome:"Apresentação institucional", preco:800, recorrente:false,
       desc:"Deck institucional (cerca de 10 a 15 slides) com a narrativa de problema, solução, planos, diferenciais e contato. Pronto pra apresentar a síndicos e à assembleia." },
-    { id:"site", grupo:"base", nome:"Site MVP institucional", preco:3500, recorrente:false,
+    { id:"site", grupo:"base", nome:"Site MVP institucional", preco:2000, recorrente:false,
       desc:"Site no ar: home, planos (Básico, Médio e Prime), como funciona, sobre e chamada de solicitar orçamento. Responsivo, rápido e com base de SEO. Modelo de lançar e ir refinando." },
     { id:"configurador", grupo:"base", nome:'Configurador "monte sua academia"', preco:1000, recorrente:false, recomendado:true,
       desc:"A mesma experiência de carrinho que o condomínio usa pra montar a academia (categoria + add-ons) e pedir orçamento. Completa o site e demonstra, na prática, o produto que você vende." },
@@ -364,8 +364,8 @@ const CONFIG = {
 
   presets: {
     essencial: { nome:"Essencial", desc:"Pra chegar rápido na assembleia.", itens:["apresentacao"] },
-    completo:  { nome:"Completo",  desc:"Marca, apresentação e o site completo no ar.", tag:"Recomendado", itens:["apresentacao","site","configurador","manutencao"] },
-    premium:   { nome:"Premium",   desc:"Tudo: site completo, SEO e página extra.", itens:["apresentacao","site","configurador","seo","pagina","manutencao"] },
+    completo:  { nome:"Completo",  desc:"Marca, apresentação, site completo e SEO no ar.", tag:"Recomendado", itens:["apresentacao","site","configurador","seo","manutencao"] },
+    premium:   { nome:"Premium",   desc:"O Completo mais uma página ou landing extra.", itens:["apresentacao","site","configurador","seo","pagina","manutencao"] },
   },
   defaultPreset: "completo",
 };
